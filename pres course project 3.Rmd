@@ -1,0 +1,21 @@
+---
+title: "R Markdown Presentation & Plotly"
+author: "Klaske Grimmerink"
+date: "22 december 2016"
+output: ioslides_presentation
+---
+
+## Interactive plot for the iris dataset
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(plotly)
+data(iris)
+plot_ly(iris, x = ~Sepal.Width, y = ~Sepal.Length, color=~Petal.Length) 
+#add_markers(p, color = ~Petal.Length, size = ~Petal.Length)
+
+```
+
+## Conclusion
+
+It is easy to create a presentation in R Markdown and include interactive plots with the plotly package.
+
