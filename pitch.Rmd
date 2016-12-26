@@ -1,0 +1,36 @@
+---
+title: "Comparing Linear Models for mtcars dataset"
+author: "Klaske Grimmerink"
+date: "26 december 2016"
+output: ioslides_presentation
+---
+
+## Description
+This application is build with shiny in R. In this application the user can compare 3 different linear regression models with one input variable to predict the miles per gallon of a vehicle. The dataset mtcars is used.
+
+
+## Input
+The user can choose the input variable for each model. This is done by the function "radioButtons" of the shiny package. With this function only 1 input variable can be selected.
+```{r, eval=FALSE}
+radioButtons("variable1", 
+             "What variable would you like to see in model 1?", 
+                       c("Cylinders" = "cyl",
+                         "Transmission" = "am",
+                         "Gears" = "gear",
+                         "Displacement"="disp",
+                         "Horsepower"="hp",
+                         "Weight"="wt",
+                         "1/4 mile time"="qsec"))
+```
+## Output
+The output shows the coefficients of the linear model predicting the miles per gallon (mpg) for the chosen input variable. Also the p-values and the R-squared value are shown. The output for the 3 models are on the same page, so the results can be compared.
+
+
+## Example
+If the user selects the Cylinders as input variable (cyl) for model 1, this is the ouput that is given for this model:
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+model1<-lm(mpg~cyl,data=mtcars)
+summary(model1)$coef
+summary(model1)$r.squared
+
+```
