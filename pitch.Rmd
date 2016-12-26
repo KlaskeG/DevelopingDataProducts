@@ -8,8 +8,10 @@ output: ioslides_presentation
 ## Description
 This application is build with shiny in R. In this application the user can compare 3 different linear regression models with one input variable to predict the miles per gallon of a vehicle. The dataset mtcars is used.
 
+The output shows the coefficients of the linear model predicting the miles per gallon (mpg) for the chosen input variable. Also the p-values and the R-squared value are shown. The output for the 3 models are on the same page, so the results can be compared.
 
-## Input
+
+## Variable selection
 The user can choose the input variable for each model. This is done by the function "radioButtons" of the shiny package. With this function only 1 input variable can be selected.
 ```{r, eval=FALSE}
 radioButtons("variable1", 
@@ -22,8 +24,23 @@ radioButtons("variable1",
                          "Weight"="wt",
                          "1/4 mile time"="qsec"))
 ```
-## Output
-The output shows the coefficients of the linear model predicting the miles per gallon (mpg) for the chosen input variable. Also the p-values and the R-squared value are shown. The output for the 3 models are on the same page, so the results can be compared.
+## server.R
+```{r, eval=FALSE}
+library(shiny)
+shinyServer(function(input, output) {
+    model1<-reactive({lm(paste("mpg ~ ",input$variable1), data = mtcars)})
+    model2<-reactive({lm(paste("mpg ~ ",input$variable2), data = mtcars)})
+    model3<-reactive({lm(paste("mpg ~ ",input$variable3), data = mtcars)})
+    
+    output$mod1 <- renderTable({summary(model1())$coef},rownames=TRUE)
+    output$mod2 <- renderTable({summary(model2())$coef},rownames=TRUE)
+    output$mod3 <- renderTable({summary(model3())$coef},rownames=TRUE)
+    output$R1<-renderTable({summary(model1())$r.squared},colnames=FALSE)
+    output$R2<-renderTable({summary(model2())$r.squared},colnames=FALSE)
+    output$R3<-renderTable({summary(model3())$r.squared},colnames=FALSE)
+})
+```
+
 
 
 ## Example

@@ -102,7 +102,9 @@
 
 <p>This application is build with shiny in R. In this application the user can compare 3 different linear regression models with one input variable to predict the miles per gallon of a vehicle. The dataset mtcars is used.</p>
 
-</article></slide><slide class=''><hgroup><h2>Input</h2></hgroup><article  id="input">
+<p>The output shows the coefficients of the linear model predicting the miles per gallon (mpg) for the chosen input variable. Also the p-values and the R-squared value are shown. The output for the 3 models are on the same page, so the results can be compared.</p>
+
+</article></slide><slide class=''><hgroup><h2>Variable selection</h2></hgroup><article  id="variable-selection">
 
 <p>The user can choose the input variable for each model. This is done by the function &quot;radioButtons&quot; of the shiny package. With this function only 1 input variable can be selected.</p>
 
@@ -116,9 +118,21 @@
                          &quot;Weight&quot;=&quot;wt&quot;,
                          &quot;1/4 mile time&quot;=&quot;qsec&quot;))</pre>
 
-</article></slide><slide class=''><hgroup><h2>Output</h2></hgroup><article  id="output">
+</article></slide><slide class=''><hgroup><h2>server.R</h2></hgroup><article  id="server.r">
 
-<p>The output shows the coefficients of the linear model predicting the miles per gallon (mpg) for the chosen input variable. Also the p-values and the R-squared value are shown. The output for the 3 models are on the same page, so the results can be compared.</p>
+<pre class = 'prettyprint lang-r'>library(shiny)
+shinyServer(function(input, output) {
+    model1&lt;-reactive({lm(paste(&quot;mpg ~ &quot;,input$variable1), data = mtcars)})
+    model2&lt;-reactive({lm(paste(&quot;mpg ~ &quot;,input$variable2), data = mtcars)})
+    model3&lt;-reactive({lm(paste(&quot;mpg ~ &quot;,input$variable3), data = mtcars)})
+    
+    output$mod1 &lt;- renderTable({summary(model1())$coef},rownames=TRUE)
+    output$mod2 &lt;- renderTable({summary(model2())$coef},rownames=TRUE)
+    output$mod3 &lt;- renderTable({summary(model3())$coef},rownames=TRUE)
+    output$R1&lt;-renderTable({summary(model1())$r.squared},colnames=FALSE)
+    output$R2&lt;-renderTable({summary(model2())$r.squared},colnames=FALSE)
+    output$R3&lt;-renderTable({summary(model3())$r.squared},colnames=FALSE)
+})</pre>
 
 </article></slide><slide class=''><hgroup><h2>Example</h2></hgroup><article  id="example">
 
